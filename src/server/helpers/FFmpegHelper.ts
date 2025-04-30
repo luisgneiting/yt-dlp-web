@@ -74,47 +74,12 @@ export class FFmpegHelper {
       // const repairShellScriptFile = join(__dirname, 'src', 'server', 'ffmpeg-repair.sh');
 
       const ffmpeg = spawn(
-        'ffmpeg',
-        // [`${repairShellScriptFile}`]
-        [
-          '-y',
-          '-loglevel',
-          'repeat+info',
-          '-i',
-          `'file:${this.filePath}'`,
-          '-map',
-          '0',
-          '-dn',
-          '-ignore_unknown',
-          '-c:v',
-          'libx264',
-          '-preset',
-          'slow',
-          '-crf',
-          '20',
-          '-c:a',
-          'aac',
-          '-b:a',
-          '192',
-          '-f',
-          'mp4',
-          '-bsf:a',
-          'aac_adtstoasc',
-          '-movflags',
-          '+faststart',
-          `'file:${this.filePath}.temp'`,
-          '&&',
-          'rm',
-          `'${this.filePath}'`,
-          '&&',
-          'mv',
-          `'${this.filePath}.temp'`,
-          `'${this.filePath}'`
-        ],
+        `ffmpeg -y -loglevel repeat+info -i "file:${this.filePath}" -map 0 -dn -ignore_unknown -c:v libx264 -preset slow -crf 20 -f mp4 -bsf:a aac_adtstoasc -movflags +faststart "file:${this.filePath}.temp" && rm "${this.filePath}" && mv "${this.filePath}.temp" "${this.filePath}"`,
         {
           shell: true
         }
       );
+
 
       ffmpeg.on('close', () => {
         resolve(undefined);
