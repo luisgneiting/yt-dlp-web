@@ -70,27 +70,26 @@ export class FFmpegHelper {
   }
 
   async repair() {
-    return new Promise((resolve) => {
-      // const repairShellScriptFile = join(__dirname, 'src', 'server', 'ffmpeg-repair.sh');
+  console.log("[FFmpegHelper] Iniciando reparo com ffmpeg:", this.filePath);
+  return new Promise((resolve, reject) => {
+    const ffmpeg = spawn(
+      `ffmpeg -y -loglevel repeat+info -i "file:${this.filePath}" -map 0 -dn -ignore_unknown -c:v libx264 -preset slow -crf 20 -f mp4 -bsf:a aac_adtstoasc -movflags +faststart "file:${this.filePath}.temp" && rm "${this.filePath}" && mv "${this.filePath}.temp" "${this.filePath}"`,
+      { shell: true }
+    );
 
-      const ffmpeg = spawn(
-        `ffmpeg -y -loglevel repeat+info -i "file:${this.filePath}" -map 0 -dn -ignore_unknown -c:v libx264 -preset slow -crf 20 -f mp4 -bsf:a aac_adtstoasc -movflags +faststart "file:${this.filePath}.temp" && rm "${this.filePath}" && mv "${this.filePath}.temp" "${this.filePath}"`,
-        {
-          shell: true
-        }
-      );
-
-
-      ffmpeg.on('close', () => {
-        resolve(undefined);
-      });
-
-      const interval = setInterval(() => {
-        if (!ffmpeg.connected) {
-          clearInterval(interval);
-          resolve(undefined);
-        }
-      }, 30 * 1000);
+    ffmpeg.stderr.on('data', (data) => {
+      console.error(`[ffmpeg error]: ${data}`);
     });
-  }
+
+    ffmpeg.on('close', (code) => {
+      if (code === 0) {
+        console.log("[FFmpegHelper] Vídeo convertido com sucesso.");
+        resolve(undefined);
+      } else {
+        reject(new Error(`[FFmpegHelper] ffmpeg falhou com código ${code}`));
+      }
+    });
+  });
+}
+
 }
