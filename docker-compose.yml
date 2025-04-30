@@ -4,15 +4,18 @@ services:
   yt-dlp-web:
     image: sooros5132/yt-dlp-web
     container_name: yt-dlp-web
-    user: 1000:1000
+    user: 1000:1000 # User Id, Group Id Setting
+    environment:
+      YTDLP_OPTIONS: "--merge-output-format mp4 --recode-video mp4"
     # environment:
     #   If you need to protect the site, set AUTH_SECRET, CREDENTIAL_USERNAME, CREDENTIAL_PASSWORD.
+    #   ex)
     #   AUTH_SECRET: "Random_string,_40+_characters_recommended"
     #   CREDENTIAL_USERNAME: "username"
     #   CREDENTIAL_PASSWORD: "password"
     volumes:
-      - ~/Desktop/downloads:/downloads
-      - ~/Desktop/cache:/cache
+      - /srv/portainer/yt-dlp/downloads:/downloads # Downloads folder
+      - /srv/portainer/yt-dlp/cache:/cache         # Cache folder
     ports:
-      - 3000:3000
+      - 9085:3000 # Web Page Port Mapping
     restart: unless-stopped
