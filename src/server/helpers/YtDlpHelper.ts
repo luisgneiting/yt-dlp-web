@@ -821,9 +821,8 @@ export class YtDlpHelper {
         );
 
         try {
-          const ffmpeg = new FFmpegHelper({
-            filePath: videoInfo.file.path
-          });
+          const ffmpeg = new FFmpegHelper({ filePath: videoInfo.file.path });
+          await ffmpegHelper.repair();
           const streams = await ffmpeg.getVideoStreams();
           videoInfo.file = {
             ...videoInfo.file,
