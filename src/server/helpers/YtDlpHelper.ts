@@ -198,6 +198,7 @@ export class YtDlpHelper {
       '--progress',
       '--no-continue',
       '--windows-filenames',
+      '--recode-video mp4 --postprocessor-args "-c:v libx264 -c:a aac"',
       // '--write-thumbnail',
       // '-o',
       // `thumbnail:${CACHE_PATH}/thumbnails/${CACHE_FILE_PREFIX}${uuid}.%(ext)s`,
@@ -409,7 +410,7 @@ export class YtDlpHelper {
             return;
           }
           const json = JSON.parse(buffer.toString());
-          const type = json?._type;
+          downloadOptionsconst type = json?._type;
 
           switch (type) {
             case 'playlist': {
