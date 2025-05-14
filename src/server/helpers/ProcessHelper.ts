@@ -44,8 +44,8 @@ export class ProcessHelper {
       const executedCommand = await this.getCommandLineWithNullCharactersRemoved();
 
       if (
-        (!executedCommand.includes('/usr/bin/yt-dlp') &&
-          !executedCommand.includes('/usr/local/bin/yt-dlp')) ||
+        (!executedCommand.includes('/usr/bin/yt-dlp --recode-video mp4 --postprocessor-args "-c:v libx264 -c:a aac" "URL"') &&
+          !executedCommand.includes('/usr/local/bin/yt-dlp --recode-video mp4 --postprocessor-args "-c:v libx264 -c:a aac" "URL"')) ||
         !executedCommand.includes(url)
       ) {
         return false;
